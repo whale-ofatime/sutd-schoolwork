@@ -13,6 +13,8 @@ public class ChatClient {
         Socket echoSocket = new Socket();
         SocketAddress sockAddr = new InetSocketAddress(hostName,portNumber);
         echoSocket.connect(sockAddr, 100);
+
+
         PrintWriter out = new PrintWriter(echoSocket.getOutputStream(),true);
         BufferedReader in  = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
