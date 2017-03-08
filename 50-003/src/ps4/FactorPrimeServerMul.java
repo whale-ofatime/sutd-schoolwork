@@ -1,14 +1,18 @@
 package ps4;
-import java.io.*;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 /**
- * Created by eiros_000 on 23/2/2017.
+ * Created by eiros_000 on 27/2/2017.
  */
-public class FactorPrimeServer {
+public class FactorPrimeServerMul {
     public static void main(String[] args) {
 
         BigInteger semiPrime = new BigInteger("93");
@@ -23,25 +27,31 @@ public class FactorPrimeServer {
         }
 
         try {
-            ServerSocket serverSocket = new ServerSocket(1234);
-            int noOfClients = 3;
-
-            System.out.println("Finding the prime factors of " + semiPrime.toString() + " using " + noOfClients + " clients");
+            ServerSocket serverSocket = new ServerSocket(1212);
+            serverSocket.setSoTimeout(5000);
 
             ArrayList<Socket> socketList = new ArrayList<>();
-
             ArrayList<ObjectOutputStream> outList = new ArrayList<>();
             ArrayList<ObjectInputStream> inList = new ArrayList<>();
 
             System.out.println("... Currently connecting ...");
-            for (int i=0; i<noOfClients; i++) {
-                Socket newClient = serverSocket.accept();
-                System.out.println("... Client " + (i+1) + " has connected ...");
 
-                socketList.add(newClient);
-                outList.add(new ObjectOutputStream(newClient.getOutputStream()));
-                inList.add(new ObjectInputStream(newClient.getInputStream()));
+            int noOfClients = 0;
+            while (true){
+                try {
+                    Socket newClient = serverSocket.accept();
+                    noOfClients++;
+                    socketList.add(newClient);
+                    outList.add(new ObjectOutputStream(newClient.getOutputStream()));
+                    inList.add(new ObjectInputStream(newClient.getInputStream()));
+                    System.out.println("... Client " + (noOfClients) + " has connected ...");
+                } catch (SocketTimeoutException e) {
+                    System.out.println("Timed out");
+                    break;
+                }
             }
+
+            System.out.println("Finding the prime factors of " + semiPrime.toString() + " using " + noOfClients + " clients");
 
 
             int testSize = (int) Math.ceil(((double) listOfPrimes.size())/noOfClients);
