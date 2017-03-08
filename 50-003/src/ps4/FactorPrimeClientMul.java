@@ -1,6 +1,8 @@
 package ps4;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -8,13 +10,13 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 
 /**
- * Created by user on 26/2/2017.
+ * Created by eiros_000 on 27/2/2017.
  */
-public class FactorPrimeClient {
+public class FactorPrimeClientMul {
     public static void main(String[] args) {
         try {
             String hostName = "localhost";
-            int portNumber = 1234;
+            int portNumber = 1212;
 
             Socket socket = new Socket();
             SocketAddress sockAddr = new InetSocketAddress(hostName,portNumber);
