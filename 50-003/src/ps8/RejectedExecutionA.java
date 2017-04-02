@@ -8,10 +8,9 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
- * Created by eiros_000 on 28/3/2017.
+ * Created by user on 2/4/2017.
  */
-public class LifeCycleWebShutDownServer {
-
+public class RejectedExecutionA {
     private static final ExecutorService exec = new ScheduledThreadPoolExecutor (100);
 
     public static void main(String[] args) throws Exception {
@@ -30,6 +29,8 @@ public class LifeCycleWebShutDownServer {
             } catch (RejectedExecutionException e) {
                 if (!exec.isShutdown()) {
                     System.out.println("LOG: task submission is rejected.");
+                } else {
+                    System.out.println("Exec has been shut down");
                 }
             }
         }

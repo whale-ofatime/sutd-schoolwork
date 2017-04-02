@@ -1,18 +1,20 @@
 package ps8;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.net.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.*;
 
 /**
- * Created by eiros_000 on 28/3/2017.
+ * Created by user on 2/4/2017.
  */
-public class LifeCycleWebShutDownServer {
-
-    private static final ExecutorService exec = new ScheduledThreadPoolExecutor (100);
+public class RejectedExecutionB {
+    private static final BlockingQueue<Runnable> taskQueue = new ArrayBlockingQueue<Runnable>(10);
+    private static final ExecutorService exec = new ThreadPoolExecutor(100, 100, 5, TimeUnit.SECONDS, taskQueue);
+//    private static final ExecutorService exec = new ScheduledThreadPoolExecutor(100);
 
     public static void main(String[] args) throws Exception {
         ServerSocket socket = new ServerSocket(4321);
@@ -30,6 +32,8 @@ public class LifeCycleWebShutDownServer {
             } catch (RejectedExecutionException e) {
                 if (!exec.isShutdown()) {
                     System.out.println("LOG: task submission is rejected.");
+                } else {
+                    System.out.println("Exec has been shut down");
                 }
             }
         }
