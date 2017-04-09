@@ -25,13 +25,18 @@ public class DiningPhilFree {
 
 class PhilosopherFree extends Thread {
     private final int index;
-    private final ForkFree left;
-    private final ForkFree right;
+    private final ForkFree firstFork;
+    private final ForkFree secondFork;
 
     public PhilosopherFree (int index, ForkFree left, ForkFree right) {
         this.index = index;
-        this.left = left;
-        this.right = right;
+        if (left.getIndex() > right.getIndex()) {
+            this.firstFork = right;
+            this.secondFork = left;
+        } else {
+            this.firstFork = left;
+            this.secondFork = right;
+        }
     }
 
     public void run() {
@@ -40,16 +45,16 @@ class PhilosopherFree extends Thread {
             while (true) {
                 Thread.sleep(randomGenerator.nextInt(100)); //not sleeping but thinking
                 System.out.println("Phil " + index + " finishes thinking.");
-                left.pickup();
+                firstFork.pickup();
                 System.out.println("Phil " + index + " picks up left fork.");
                 Thread.sleep(1000);
-                right.pickup();
+                secondFork.pickup();
                 System.out.println("Phil " + index + " picks up right fork.");
                 Thread.sleep(randomGenerator.nextInt(100)); //eating
                 System.out.println("Phil " + index + " finishes eating.");
-                left.putdown();
+                firstFork.putdown();
                 System.out.println("Phil " + index + " puts down left fork.");
-                right.putdown();
+                secondFork.putdown();
                 System.out.println("Phil " + index + " puts down right fork.");
             }
         } catch (InterruptedException e) {
@@ -64,6 +69,10 @@ class ForkFree {
 
     public ForkFree (int index) {
         this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public synchronized void pickup () throws InterruptedException {

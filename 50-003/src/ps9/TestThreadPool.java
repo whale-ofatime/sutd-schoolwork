@@ -25,31 +25,28 @@ public class TestThreadPool extends TestCase {
             }
         };
 
-        while (true) {
+        int numThreads = 0;
+
+        long startTime = System.currentTimeMillis();
+        long currentTime = startTime;
+
+        while ((currentTime - startTime) < 10000) {
             exec.execute(task);
-            int numThreads = 0;
             if (exec instanceof ThreadPoolExecutor) {
                 numThreads = ((ThreadPoolExecutor) exec).getActiveCount();
             }
             System.out.println("Current number of active threads: " + numThreads);
+
+            if (numThreads <= 10) {
+                currentTime = System.currentTimeMillis();
+                Thread.sleep(500);
+            } else {
+                break;
+            }
         }
 
-        //hint: you can use the following code to get the number of active threads in a thread pool
-        /*int numThreads = 0;
-        if (exec instanceof ThreadPoolExecutor) {
-        	numThreads = ((ThreadPoolExecutor) exec).getActiveCount();
-        }*/
-//        exec.shutdownNow();
-//        exec.shutdown();
-    }
+        exec.shutdown();
+        assertTrue(numThreads <= 10);
 
-    public static void main(String[] args) {
-        TestThreadPool test = new TestThreadPool();
-        try {
-            test.testPoolExpansion();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
-
 }
